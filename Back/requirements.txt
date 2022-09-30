@@ -1,0 +1,9 @@
+datetime
+pandas
+numpy
+mysqlclient
+python-dotenv
+flask
+flask-cors
+
+

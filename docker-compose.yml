@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  front:
+    build: ./Front/attendance/
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    depends_on: 
+      - back  
+  back:
+    build: ./Back
+    ports:
+      - "5000:5000"
+    links:
+      - my_sql
+    depends_on: 
+      - my_sql    
+  my_sql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: attendance
+      MYSQL_USER: david3
+      MYSQL_PASSWORD: david
+      MYSQL_ROOT_PASSWORD: david
+    volumes:
+      - /Data:/var/lib/mysql
