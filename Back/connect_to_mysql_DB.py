@@ -38,14 +38,14 @@ def checkTableExists(dbcon, tablename):
 
 def fill_the_table():
     db = connect_to_mysql()
-    if not checkTableExists(db, "attendance"):
+    if not checkTableExists(db, "attendance_total"):
         cur = db.cursor()
-        cur.execute("CREATE TABLE attendance (student_name varchar(128),attTime double(10,2), lec_time double(10,2),att_percent_time double(4,2),more_then_70_perc varchar(15))")
+        cur.execute("CREATE TABLE attendance_total (student_name text,attTime double(10,2), lec_time double(10,2),att_percent_time double(4,2),more_then_70_perc varchar(15))")
         result = at.read_from_csv()
         for index, row in result.iterrows():
             print(row["Name"], row["Total atendance time (min)"], row["Total lecture time (min)"], row["% Attendance time"],row["More then 70% Attendence"])
             cur.execute(
-                "INSERT INTO attendance (student_name ,attTime , lec_time ,att_percent_time ,more_then_70_perc ) VALUES (%s,%s,%s,%s,%s)",(row["Name"], row["Total atendance time (min)"], row["Total lecture time (min)"], row["% Attendance time"],row["More then 70% Attendence"]))
+                "INSERT INTO attendance_total (student_name ,attTime , lec_time ,att_percent_time ,more_then_70_perc ) VALUES (%s,%s,%s,%s,%s)",(row["Name"], row["Total atendance time (min)"], row["Total lecture time (min)"], row["% Attendance time"],row["More then 70% Attendence"]))
         cur.close()
     db.close()
 
