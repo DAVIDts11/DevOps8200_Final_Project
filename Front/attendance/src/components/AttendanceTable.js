@@ -17,7 +17,8 @@ function AttendanceTable() {
     const [attendanceData, setAttendanceData] = useState([])
     useEffect(() => {
         let attData = [] ; 
-        axios.get(`http://localhost:5000/`)
+        const ip = process.env.REACT_APP_BACK_END_IP ;
+        axios.get(`http://${ip}:5000/`) 
         .then(async res => {
           const data = res.data;
           console.log('data',data);
