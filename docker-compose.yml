@@ -6,7 +6,9 @@ services:
       - "3000:3000"
     stdin_open: true
     depends_on: 
-      - back  
+      - back 
+    environment:
+      REACT_APP_BACK_END_IP: ${REACT_APP_BACK_END_IP}
   back:
     build: ./Back
     ports:
