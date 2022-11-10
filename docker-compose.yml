@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   front:
-    build: ./Front/attendance/
+    #build: ./Front/attendance/
     image: davidts11/attendance-fronte:${TAG}
     ports:
       - "3000:3000"
@@ -11,7 +11,7 @@ services:
     environment:
       REACT_APP_BACK_END_IP: ${REACT_APP_BACK_END_IP}
   back:
-    build: ./Back
+    #build: ./Back
     image: davidts11/attendance-back:${TAG}
     ports:
       - "5000:5000"
