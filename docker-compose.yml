@@ -2,7 +2,7 @@ version: "3.9"
 services:
   front:
     build: ./Front/attendance/
-    image: davidts11/attendance-fronte:{TAG}
+    image: davidts11/attendance-fronte:${TAG}
     ports:
       - "3000:3000"
     stdin_open: true
