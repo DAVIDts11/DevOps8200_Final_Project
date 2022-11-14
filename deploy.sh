@@ -7,30 +7,33 @@ set -xe
 echo "Hello , Starting deploy script  . . ."
 
 # Checking arguments :
+
+machine=$1
 if  [ $# != 1 ]; then
     echo "You should provide one argument:
                deploy.sh <test/prod> "
     exit 1
 fi
 
-if [ $1 != "test" ] && [ $1 != "prod" ]; then
+if [ $machine != "test" ] && [ $machine != "prod" ]; then
             echo "The argument should be 'test' or 'prod'. "
             exit 1
 fi
 
-echo "This is $1 machine "
+echo "This is $machine machine "
+
 
 # Making dest. directory and copping files :
-ssh ubuntu@test 'sudo mkdir -p /home/ubuntu/dockerCompose;sudo chmod 777 /home/ubuntu/dockerCompose'
-scp  -o StrictHostKeyChecking=no .env ubuntu@test:/home/ubuntu/dockerCompose
-scp  -o StrictHostKeyChecking=no docker-compose.yml ubuntu@test:/home/ubuntu/dockerCompose
+ssh ubuntu@$machine 'sudo mkdir -p /home/ubuntu/dockerCompose;sudo chmod 777 /home/ubuntu/dockerCompose'
+scp  -o StrictHostKeyChecking=no .env ubuntu@$machine:/home/ubuntu/dockerCompose
+scp  -o StrictHostKeyChecking=no docker-compose.yml ubuntu@$machine:/home/ubuntu/dockerCompose
 
 
 #############################################
 ###   Running dockers on dest. machine :  ###
 #############################################
 
-ssh  ubuntu@test 'cd /home/ubuntu/dockerCompose;
+ssh  ubuntu@$machine 'cd /home/ubuntu/dockerCompose;
 
   # Stopping running conteiners and cleaning machine from docker images :
   if [ $(docker ps -q|wc -l) -gt 0 ] ;
@@ -49,7 +52,7 @@ ssh  ubuntu@test 'cd /home/ubuntu/dockerCompose;
 
 
 # If it is the test machine testing the wesite :
-if [ $1 == "test" ];then
+if [ $machine== "test" ];then
  sleep 10s
  if [ $(curl -Is  http://test:3000/  | head -1 |grep -c "200") == 0 ];
         then echo "ERROR : The 'Attendance' website does not available ";
