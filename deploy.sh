@@ -37,7 +37,7 @@ ssh  ubuntu@test 'cd /home/ubuntu/dockerCompose;
      then docker ps -q|xargs docker stop ;
      else  echo  "There is no runnig docker containers on this machine";
   fi
-  sudo docker system prune -af
+  docker system prune -af
 
   # Pullling docker images and running docker compose :
   IP="$(curl api.ipify.org)";
