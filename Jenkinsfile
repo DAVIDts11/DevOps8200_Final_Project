@@ -20,9 +20,13 @@ pipeline {
             steps {
                 echo 'Building...'
                 
-                // //Cleaning: 
-                // sh "docker system prune -f"
-                // sh "docker images -q |xargs docker rmi"
+                //Cleaning jenkins machine from dockers : 
+                 sh """ if [ $(docker ps -q|wc -l) -gt 0 ] ;
+                           then docker ps -q|xargs docker stop ;
+                           else  echo  "There is no runnig docker containers on this machine";
+                        fi
+                        sudo docker system prune -af
+                    """
                 
                 //Building images :
                 script {
