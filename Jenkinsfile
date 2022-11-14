@@ -1,5 +1,8 @@
 pipeline {
+
     agent any
+    options { disableConcurrentBuilds() }
+
 
     environment {
         front_repository = "davidts11/attendance-fronte"
@@ -21,12 +24,12 @@ pipeline {
                 echo 'Building...'
                 
                 //Cleaning jenkins machine from dockers : 
-                 sh """ if [ $(docker ps -q|wc -l) -gt 0 ] ;
-                           then docker ps -q|xargs docker stop ;
-                           else  echo  "There is no runnig docker containers on this machine";
-                        fi
-                        sudo docker system prune -af
-                    """
+                 sh '''if [ $(docker ps -q|wc -l) -gt 0 ] ;
+                          then docker ps -q|xargs docker stop ;
+                          else  echo  "There is no runnig docker containers on this machine";
+                      fi '''
+                 sh "docker system prune -af"
+                    
                 
                 //Building images :
                 script {
@@ -46,33 +49,35 @@ pipeline {
                 } 
                 
                 //Configuring .env file :
-                sh """ echo "TAG=$BUILD_NUMBER" > .env """
+                sh '''echo "TAG=$BUILD_NUMBER" > .env ;'''
             }
         }
         
         stage('Test') {
             steps {
-            //   [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
-            //         ssh-keyscan -t rsa 172.31.33.36 >> ~/.ssh/known_hosts
-            //ssh-keyscan -t rsa test >> ~/.ssh/known_hosts
+                //  sh "[ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh "
+                //  sh "ssh-keyscan -t rsa test >> ~/.ssh/known_hosts"
                 echo 'Testing...'
          
-            sshagent(['test-deploy-machine-key']) {
-                sh "/bin/bash deploy.sh test"   
+                sshagent(['test-deploy-machine-key']) {
+                    sh "/bin/bash deploy.sh test"   
                 }
-             //sh"mkdir -p /Data"
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploing....'
+                //  sh "[ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh "
+                //  sh "ssh-keyscan -t rsa prod >> ~/.ssh/known_hosts"
+                 
                 sshagent(['test-deploy-machine-key']) {
                     sh "/bin/bash deploy.sh prod"   
                 }
-             //sh "mkdir -p /Data"
             }
         }
     }
+    
+    
 //         post {
 //         always {
 //         }
