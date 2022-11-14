@@ -42,7 +42,7 @@ pipeline {
                 } 
                 
                 //Configuring .env file :
-                echo "TAG=$BUILD_NUMBER" > .env" 
+                echo "TAG=$BUILD_NUMBER" > .env
             }
         }
         
