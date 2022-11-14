@@ -7,8 +7,6 @@ pipeline {
         registryCredential = 'my-dockerhub-credentials'
       }
       
-      
-      
     stages {
         
         stage('Checkout') {
@@ -25,7 +23,6 @@ pipeline {
                 // //Cleaning: 
                 // sh "docker system prune -f"
                 // sh "docker images -q |xargs docker rmi"
-
                 
                 //Building images :
                 script {
@@ -42,10 +39,13 @@ pipeline {
                     docker.withRegistry( '', registryCredential ) {
                         dockerImageBack.push() 
                      }
-                }
+                } 
                 
+                //Configuring .env file :
+                echo "TAG=$BUILD_NUMBER" > .env" 
             }
         }
+        
         stage('Test') {
             steps {
             //   [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
@@ -54,26 +54,20 @@ pipeline {
                 echo 'Testing...'
          
             sshagent(['test-deploy-machine-key']) {
-                     #echo "TAG=$BUILD_NUMBER" > .env 
-                sh "/bin/bash deploy.sh"
-                   
-            
-                        }
-
+                sh "/bin/bash deploy.sh test"   
+                }
              //sh"mkdir -p /Data"
- 
-             
             }
         }
         stage('Deploy') {
             steps {
-           
                 echo 'Deploing....'
+                sshagent(['test-deploy-machine-key']) {
+                    sh "/bin/bash deploy.sh prod"   
+                }
              //sh "mkdir -p /Data"
-   
             }
         }
-        
     }
 //         post {
 //         always {
